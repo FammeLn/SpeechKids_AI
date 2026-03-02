@@ -1,6 +1,29 @@
-apiVersion: v1
-kind: ConfigMap
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: order-processor-config
-data:
-  KAFKA_BROKERS: "my-kafka-cluster.kafka-namespace.svc.cluster.local:9092"
+  name: reactive-pipeline
+  labels:
+    app: reactive-pipeline
+spec:
+  replicas: 2 # Можно легко масштабировать
+  selector:
+    matchLabels:
+      app: reactive-pipeline
+  template:
+    metadata:
+      labels:
+        app: reactive-pipeline
+    spec:
+      containers:
+        - name: reactive-pipeline
+          image: your-registry/reactive-kafka-app:latest # Путь к вашему образу
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-service:9092" # Имя сервиса Kafka внутри k8s
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
