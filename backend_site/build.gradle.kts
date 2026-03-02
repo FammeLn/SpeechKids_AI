@@ -22,8 +22,21 @@ repositories {
 }
 
 dependencies {
+    // Web API
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    // Kotlin support
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // Database (JPA + PostgreSQL)
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly("org.postgresql:postgresql")
+
+    // Lombok (если используешь Java-классы)
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

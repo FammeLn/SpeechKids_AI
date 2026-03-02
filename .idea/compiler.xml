@@ -8,6 +8,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="untitled" />
       </profile>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.36/5a30490a6e14977d97d9c73c924c1f1b5311ea95/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="Halfi_core.backend_site.main" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="21" />
   </component>
@@ -16,6 +23,8 @@
       <module name="Halfi_core.backend-site.main" options="-parameters" />
       <module name="Halfi_core.backend-site.test" options="-parameters" />
       <module name="Halfi_core.backend_site" options="-parameters" />
+      <module name="Halfi_core.backend_site.main" options="-parameters" />
+      <module name="Halfi_core.backend_site.test" options="-parameters" />
       <module name="untitled" options="-parameters" />
     </option>
   </component>

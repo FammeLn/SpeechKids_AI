@@ -9,7 +9,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/backend-site" />
+            <option value="$PROJECT_DIR$/backend_site" />
+            <option value="$PROJECT_DIR$/frontend_site" />
           </set>
         </option>
       </GradleProjectSettings>
