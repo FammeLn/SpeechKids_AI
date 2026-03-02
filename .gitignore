@@ -1,0 +1,5 @@
+# Исключенные пути проекта
+/.gradle/
+/build/
+/out/
+/untitled/target/
