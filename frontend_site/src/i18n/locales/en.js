@@ -10,6 +10,7 @@ export default {
     accent: 'Accent',
     hideNavbar: 'Hide navigation',
     reduceMotion: 'Disable animations',
+    showBalance: 'Show balance',
   },
   common: {
     yes: 'Yes',

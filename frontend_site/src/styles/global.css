@@ -841,6 +841,117 @@ html[data-hide-navbar="1"][data-header-lock="1"] .headerShell {
   transform: translateY(0);
 }
 
+
+/* =========================================================
+   2.5 NAVBAR: BALANCE (optional)
+========================================================= */
+
+.navBalance {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  /* чтобы не ломать высоту navbar */
+  height: 36px;
+
+  /* ENTER/EXIT */
+  opacity: 0;
+  transform: translateY(-2px) scale(0.985);
+  max-width: 0;
+  margin-left: 0;
+  overflow: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity 260ms ease,
+    transform 320ms cubic-bezier(.2, .9, .2, 1),
+    max-width 320ms cubic-bezier(.2, .9, .2, 1),
+    margin-left 320ms cubic-bezier(.2, .9, .2, 1);
+}
+
+.navBalance.isShown {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  max-width: 200px; /* достаточно под "999999+" */
+  margin-left: 8px;
+  pointer-events: auto;
+}
+
+.navBalance__value {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 14px;
+
+  /* “нет контура” по умолчанию */
+  background: transparent;
+  border: 1px solid transparent;
+
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    transform 120ms ease;
+}
+
+.navBalance__ico {
+  color: var(--accent);
+  opacity: 0.95;
+}
+
+.navBalance__num {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-main);
+  font-size: 14px;
+}
+
+/* Плюсик тоже без контура по умолчанию */
+.navBalance__plus {
+  width: 30px;
+  height: 30px;
+  border-radius: 12px;
+
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-main);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    transform 120ms ease,
+    opacity 180ms ease;
+}
+
+.navBalance__plus:active {
+  transform: translateY(1px);
+}
+
+/* Подсвечивается ТОЛЬКО плюсик */
+
+.navBalance__plus:hover {
+  background: color-mix(in srgb, var(--bg-main) 78%, var(--border-main) 22%);
+  border-color: color-mix(in srgb, var(--accent) 26%, var(--border-main) 74%);
+}
+
+.navBalance__plus:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-soft) 40%, transparent 60%);
+}
+
+/* Reduce motion */
+html[data-reduce-motion="1"] .navBalance,
+html[data-reduce-motion="1"] .navBalance__value,
+html[data-reduce-motion="1"] .navBalance__plus {
+  transition: none !important;
+}
+
 /* =========================================================
    3 REDUCE MOTION (except loading bar)
 ========================================================= */
@@ -859,11 +970,20 @@ html[data-reduce-motion="1"] .topBar * {
 /* =========================================================
    4.0 AUTH MODAL (auth pages as modal under navbar)
    /login /register /forgot-password
+   - Модал НЕ перекрывает navbar (контейнер начинается ниже navbar)
+   - Backdrop плавно затемняется (0.5s)
+   - Open/Close анимация общая
+   - Swap анимация ТОЛЬКО для .authLeft
+   - Reduce motion: только когда html[data-reduce-motion="1"]
 ========================================================= */
 
+/* ВАЖНО: контейнер начинается ниже navbar -> navbar кликабельный */
 .authModal {
   position: fixed;
-  inset: 0;
+  left: 0;
+  right: 0;
+  top: var(--authNavTop, 76px);
+  bottom: 0;
   z-index: 5000;
   pointer-events: auto;
 }
@@ -877,10 +997,7 @@ html[data-auth-popover="1"] body {
 /* ---------- Backdrop ---------- */
 .authModal__backdrop {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: var(--authNavTop, 76px);
-  bottom: 0;
+  inset: 0;
 
   background: color-mix(in srgb, black 28%, transparent 72%);
   z-index: 0;
@@ -899,19 +1016,18 @@ html[data-auth-popover="1"] body {
   transition-duration: 260ms;
 }
 
-/* ---------- Panel ---------- */
+/* ---------- Panel (doesn't steal clicks) ---------- */
 .authModal__panel {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: var(--authNavTop, 76px);
-  bottom: 0;
+  inset: 0;
 
   display: grid;
   place-items: center;
   padding: 14px 10px;
 
   z-index: 1;
+
+  /* чтобы клики по “пустоте” уходили в backdrop */
   pointer-events: none;
 }
 
@@ -949,33 +1065,40 @@ html[data-auth-popover="1"] body {
     opacity 260ms ease;
 }
 
-/* ---------- Swap between auth urls (ONLY leftFx, because it persists) ---------- */
-
 /* ---------- Swap between auth urls (ONLY left block) ---------- */
-
-/* БАЗА: мягкая инерция */
+/* базовое состояние (мягкое) */
 .authModal.isOpen .authModal__leftFx .authLeft {
   will-change: transform, filter, opacity;
   transition:
-    transform 520ms cubic-bezier(.2, .9, .2, 1),
-    filter 520ms cubic-bezier(.2, .9, .2, 1),
+    transform 520ms cubic-bezier(.22, .9, .18, 1),
+    filter 520ms cubic-bezier(.22, .9, .18, 1),
     opacity 380ms ease;
 }
 
-/* SWAP: лёгкий “дох” вместо дерзкого пинка */
+/* swap: очень мягкий “дох”, без дерзкого пинка */
 .authModal.isOpen .authModal__leftFx.isSwap .authLeft {
-  opacity: 0.96;
-  transform: translateY(6px) scale(0.996);
-  filter: blur(1.0px);
+  opacity: 0.965;
+  transform: translateY(5px) scale(0.997);
+  filter: blur(1px);
 }
 
-/* reduce motion */
-html[data-reduce-motion="1"] .authModal.isOpen .authModal__leftFx.isSwap .authLeft {
+/* ВАЖНО: правый блок участвует в open/close, но НЕ пульсирует на swap */
+.authModal.isOpen .authModal__leftFx.isSwap .authRight {
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
+}
+
+/* ---------- Reduce motion ---------- */
+html[data-reduce-motion="1"] .authModal__backdrop,
+html[data-reduce-motion="1"] .authModal__leftFx,
+html[data-reduce-motion="1"] .authModal.isOpen .authModal__leftFx .authLeft {
+  transition: none !important;
+  animation: none !important;
   transform: none !important;
   filter: none !important;
   opacity: 1 !important;
 }
-
 /* =========================================================
    4.1 AUTH LAYOUT
    Сетка, колонки, sticky right, высоты

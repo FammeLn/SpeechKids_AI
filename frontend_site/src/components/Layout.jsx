@@ -27,13 +27,8 @@ export default function Layout({ children }) {
   // t
   const t = useT(settings.locale)
 
-  // ✅ inject t into children (RouterView)
+  // inject t into children (RouterView)
   const content = isValidElement(children) ? cloneElement(children, { t }) : children
-
-  // lock header while popovers open
-  useEffect(() => {
-    document.documentElement.dataset.headerLock = (settingsOpen || drawerOpen) ? '1' : '0'
-  }, [settingsOpen, drawerOpen])
 
   // ---------- Locale FX ----------
   const [localeFx, setLocaleFx] = useState('off') // 'off' | 'in' | 'out'
@@ -92,7 +87,6 @@ export default function Layout({ children }) {
         setThemeFx('hold')
         document.documentElement.dataset.themeFx = 'hold'
 
-        // тема меняется на следующем тике, чтобы transition точно применился
         themeFxTimersRef.current.push(
           setTimeout(() => updateSettings({ theme: nextTheme }), 0)
         )
@@ -135,16 +129,16 @@ export default function Layout({ children }) {
 
   return (
     <div>
-      {/* Overlays must be outside .app so they don't inherit layout padding logic */}
+      {/* overlays outside .app */}
       <div className={`localeFxOverlay ${localeFx}`} aria-hidden={localeFx === 'off'} />
       <div className={`themeFxOverlay ${themeFx}`} aria-hidden={themeFx === 'off'} />
 
-      {/* hover-зона для показа navbar, когда он скрыт */}
       <div className="navbarPeekZone" />
 
       <div className="headerShell">
         <Navbar
           user={user}
+          settings={settings}
           onOpenAuth={toggleDrawer}
           onOpenSettings={toggleSettings}
           t={t}
@@ -152,7 +146,6 @@ export default function Layout({ children }) {
         <TopLoadingBar signal={barSignal} />
       </div>
 
-      {/* only content area uses .app padding-top animation */}
       <div className="app">
         <SettingsPopover
           open={settingsOpen}
@@ -171,10 +164,12 @@ export default function Layout({ children }) {
         <AuthPopover
           open={drawerOpen}
           onClose={closeDrawer}
-          onLogin={(u) => setUser(u)}
           user={user}
-          onLogout={() => setUser(null)}
-          t={t}
+          onTryLogin={async ({ email, password }) => {
+            // TODO: подключить реальный API
+            // Верни сюда свою логику
+            return { ok: false, reason: 'credentials' }
+          }}
         />
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { lockHeader, unlockHeader } from './nav/headerLock'
 
 /**
  * onTryLogin: async ({ email, password }) => ({ ok: true } | { ok: false, reason?: 'email'|'password'|'credentials' })
@@ -7,20 +8,14 @@ import { useNavigate } from 'react-router-dom'
  */
 export default function AuthPopover({ open, onClose, user, onTryLogin }) {
   const navigate = useNavigate()
+  const location = useLocation()
   const panelRef = useRef(null)
 
-  // таймер, чтобы навигация была ПОСЛЕ анимации закрытия
   const closeTimerRef = useRef(null)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
-
-  const closeThen = (fn) => {
-    onClose?.()
-    if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current)
-    closeTimerRef.current = window.setTimeout(() => fn?.(), 340) // совпадает с 320ms transition
-  }
 
   // закрытие: ESC + клик вне
   useEffect(() => {
@@ -48,8 +43,27 @@ export default function AuthPopover({ open, onClose, user, onTryLogin }) {
     }
   }, [])
 
-  const goRegister = () => closeThen(() => navigate('/register'))
-  const goRecover = () => closeThen(() => navigate('/forgot-password'))
+  useEffect(() => {
+  if (!open) return
+  lockHeader('auth-popover')
+  return () => unlockHeader('auth-popover')
+}, [open])
+
+  const openBig = (path, state = {}) => {
+    // Открываем большой модал “поверх” текущей страницы
+    navigate(path, {
+      state: {
+        backgroundLocation: location, // <- ключ к “не уходим со страницы”
+        ...state,
+      },
+    })
+
+    // Маленький закрываем параллельно (не ждём 340ms)
+    onClose?.()
+  }
+
+  const goRegister = () => openBig('/register')
+  const goRecover = () => openBig('/forgot-password')
 
   const submit = async (e) => {
     e.preventDefault()
@@ -59,41 +73,27 @@ export default function AuthPopover({ open, onClose, user, onTryLogin }) {
     setSubmitting(true)
 
     try {
-      // 1) пробуем быстрый логин
       const res = await onTryLogin?.(payload)
 
       if (res?.ok) {
-        // успех: закрываем и остаёмся (или можно вести в /account)
-        closeThen(() => {
-          // если хочешь редирект после успеха:
-          // navigate('/account')
-        })
+        // успех: просто закрываем маленький, большой не открываем
+        onClose?.()
         return
       }
 
-      // 2) ошибка: сохраняем ввод и ведём на /login
-      closeThen(() =>
-        navigate('/login', {
-          state: {
-            prefillEmail: payload.email,
-            prefillPassword: payload.password,
-            authError: res?.reason || 'credentials',
-          },
-        })
-      )
+      // ошибка: открываем /login поверх текущей страницы и показываем ошибку
+      openBig('/login', {
+        prefillEmail: payload.email,
+        prefillPassword: payload.password,
+        authError: res?.reason || 'credentials',
+      })
     } catch {
-      // 3) на всякий случай: тоже на /login, но с общей ошибкой
-      closeThen(() =>
-        navigate('/login', {
-          state: {
-            prefillEmail: payload.email,
-            prefillPassword: payload.password,
-            authError: 'network',
-          },
-        })
-      )
+      openBig('/login', {
+        prefillEmail: payload.email,
+        prefillPassword: payload.password,
+        authError: 'network',
+      })
     } finally {
-      // если мы закрыли поповер — он размонтируется/скроется, но ок оставить
       setSubmitting(false)
     }
   }
@@ -109,16 +109,15 @@ export default function AuthPopover({ open, onClose, user, onTryLogin }) {
               <button
                 type="button"
                 className="navPop__btn navPop__btn--accent"
-                onClick={() => closeThen(() => navigate('/account'))}
+                onClick={() => {
+                  onClose?.()
+                  navigate('/account')
+                }}
               >
                 Аккаунт
               </button>
 
-              <button
-                type="button"
-                className="navPop__btn navPop__btn--outline"
-                onClick={onClose}
-              >
+              <button type="button" className="navPop__btn navPop__btn--outline" onClick={onClose}>
                 Закрыть
               </button>
             </div>
@@ -155,20 +154,11 @@ export default function AuthPopover({ open, onClose, user, onTryLogin }) {
             </div>
 
             <div className="navPop__actions">
-              <button
-                type="submit"
-                className="navPop__btn navPop__btn--accent"
-                disabled={submitting}
-              >
+              <button type="submit" className="navPop__btn navPop__btn--accent" disabled={submitting}>
                 {submitting ? '...' : 'Войти'}
               </button>
 
-              <button
-                type="button"
-                className="navPop__btn navPop__btn--outline"
-                onClick={goRegister}
-                disabled={submitting}
-              >
+              <button type="button" className="navPop__btn navPop__btn--outline" onClick={goRegister} disabled={submitting}>
                 Регистрация
               </button>
             </div>

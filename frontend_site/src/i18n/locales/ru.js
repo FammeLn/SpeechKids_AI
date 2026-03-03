@@ -10,6 +10,7 @@ export default {
     accent: 'Акцент',
     hideNavbar: 'Скрывать навигацию',
     reduceMotion: 'Отключить анимации',
+    showBalance: 'Показывать баланс',
   },
   common: {
     yes: 'Да',

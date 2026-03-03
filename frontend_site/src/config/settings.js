@@ -6,4 +6,5 @@ export const DEFAULT_SETTINGS = {
   accent: 'orange',      // orange | blue | green | red
   hideNavbar: false,     // boolean
   reduceMotion: false,   // boolean
+  showBalance: false,    // boolean
 }

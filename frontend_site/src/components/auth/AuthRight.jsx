@@ -1,9 +1,24 @@
 import { FileText } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export default function AuthRight({ t, active }) {
-  const nav = useNavigate()
-  const go = (path) => nav(path, { replace: true })
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  /**
+   * Всегда сохраняем backgroundLocation,
+   * чтобы фон не терялся при переключении форм
+   */
+  const go = (path) => {
+    const bg = location.state?.backgroundLocation || location
+
+    navigate(path, {
+      replace: true, // не раздуваем историю
+      state: {
+        backgroundLocation: bg,
+      },
+    })
+  }
 
   return (
     <div className="authRight">
@@ -46,21 +61,33 @@ export default function AuthRight({ t, active }) {
 
           <ul className="authDocsList">
             <li>
-              <button type="button" className="linkBtn" onClick={() => alert(t('auth.userAgreement'))}>
+              <button
+                type="button"
+                className="linkBtn"
+                onClick={() => alert(t('auth.userAgreement'))}
+              >
                 <FileText size={16} className="docIco" />
                 <span>{t('auth.userAgreement')}</span>
               </button>
             </li>
 
             <li>
-              <button type="button" className="linkBtn" onClick={() => alert(t('auth.privacyPolicy'))}>
+              <button
+                type="button"
+                className="linkBtn"
+                onClick={() => alert(t('auth.privacyPolicy'))}
+              >
                 <FileText size={16} className="docIco" />
                 <span>{t('auth.privacyPolicy')}</span>
               </button>
             </li>
 
             <li>
-              <button type="button" className="linkBtn" onClick={() => alert(t('auth.promosTerms'))}>
+              <button
+                type="button"
+                className="linkBtn"
+                onClick={() => alert(t('auth.promosTerms'))}
+              >
                 <FileText size={16} className="docIco" />
                 <span>{t('auth.promosTerms')}</span>
               </button>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { lockHeader, unlockHeader } from '../nav/headerLock' // подстрой путь
 
 export default function AuthPopoverShell() {
   const nav = useNavigate()
@@ -12,27 +13,36 @@ export default function AuthPopoverShell() {
   const closeTimerRef = useRef(null)
   const swapTimerRef = useRef(null)
 
-  // top navbar (64 + 2 + 10 = 76)
   const navTop = 76
   const panelStyle = useMemo(() => ({ '--authNavTop': `${navTop}px` }), [navTop])
 
+  // BACKGROUND (для modal-routes паттерна)
+  // Мы будем закрываться nav(-1), а если вдруг зашли прямой ссылкой — уйдём на /
+  const hasBackground = !!location.state?.backgroundLocation
+
   // lock navbar + body scroll, set scrollbar compensation var
-  useEffect(() => {
-    const html = document.documentElement
-    html.setAttribute('data-header-lock', '1')
-    html.setAttribute('data-auth-popover', '1')
+useEffect(() => {
+  const html = document.documentElement
 
-    const sbw = window.innerWidth - document.documentElement.clientWidth
-    html.style.setProperty('--sbw', `${Math.max(0, sbw)}px`)
+  // стековый lock
+  lockHeader('auth-modal')
 
-    return () => {
-      html.removeAttribute('data-header-lock')
-      html.removeAttribute('data-auth-popover')
-      html.style.removeProperty('--sbw')
-    }
-  }, [])
+  // флаг "большой открыт" оставим как был (тебе нужен для body lock)
+  html.setAttribute('data-auth-popover', '1')
 
-  // OPEN: гарантированно после первого paint
+  const sbw = window.innerWidth - document.documentElement.clientWidth
+  html.style.setProperty('--sbw', `${Math.max(0, sbw)}px`)
+
+  return () => {
+    html.removeAttribute('data-auth-popover')
+    html.style.removeProperty('--sbw')
+
+    // снимаем только свой ключ
+    unlockHeader('auth-modal')
+  }
+}, [])
+
+  // OPEN after first paint so CSS transitions trigger
   useEffect(() => {
     const reduce = document.documentElement.getAttribute('data-reduce-motion') === '1'
     if (reduce) {
@@ -40,8 +50,6 @@ export default function AuthPopoverShell() {
       return
     }
 
-    // 1) первый кадр — компонент уже в DOM со стартовыми opacity/transform из CSS
-    // 2) второй кадр — включаем .isOpen -> transition
     const t = setTimeout(() => {
       requestAnimationFrame(() => setIsOpen(true))
     }, 0)
@@ -49,25 +57,19 @@ export default function AuthPopoverShell() {
     return () => clearTimeout(t)
   }, [])
 
-  // SWAP on auth route change: делаем "пульс" через два кадра
+  // SWAP pulse on auth route change
   useEffect(() => {
     const reduce = document.documentElement.getAttribute('data-reduce-motion') === '1'
     if (reduce) return
 
-    // сбрасываем, чтобы следующий set(true) точно дал изменение стилей
     setSwap(false)
-
-    // forced reflow (важно, иначе может склеиться в один кадр)
     // eslint-disable-next-line no-unused-expressions
     document.body.offsetHeight
 
     requestAnimationFrame(() => {
       setSwap(true)
-
       if (swapTimerRef.current) window.clearTimeout(swapTimerRef.current)
-      swapTimerRef.current = window.setTimeout(() => {
-        setSwap(false)
-      }, 160)
+      swapTimerRef.current = window.setTimeout(() => setSwap(false), 180)
     })
 
     return () => {
@@ -75,10 +77,20 @@ export default function AuthPopoverShell() {
     }
   }, [location.pathname])
 
+  const finishCloseNav = () => {
+    // если открыли модалку “поверх” фоновой страницы — просто назад
+    if (hasBackground) {
+      nav(-1)
+      return
+    }
+    // если зашли прямой ссылкой на /login — закрытие ведёт на главную
+    nav('/', { replace: true })
+  }
+
   const doClose = () => {
     const reduce = document.documentElement.getAttribute('data-reduce-motion') === '1'
     if (reduce) {
-      nav('/', { replace: true })
+      finishCloseNav()
       return
     }
 
@@ -87,8 +99,8 @@ export default function AuthPopoverShell() {
 
     if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current)
     closeTimerRef.current = window.setTimeout(() => {
-      nav('/', { replace: true })
-    }, 260)
+      finishCloseNav()
+    }, 260) // должно совпасть с твоим close transition
   }
 
   // ESC close
@@ -96,6 +108,20 @@ export default function AuthPopoverShell() {
     const onKey = (e) => e.key === 'Escape' && doClose()
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Navbar clickable: click on header closes modal but doesn't cancel click
+  useEffect(() => {
+    const onDownCapture = (e) => {
+      // подстрой селектор при необходимости:
+      const inHeader = e.target.closest('.headerShell')
+      if (!inHeader) return
+      doClose()
+    }
+
+    window.addEventListener('mousedown', onDownCapture, true)
+    return () => window.removeEventListener('mousedown', onDownCapture, true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -108,11 +134,7 @@ export default function AuthPopoverShell() {
 
   return (
     <div
-      className={[
-        'authModal',
-        isOpen ? 'isOpen' : '',
-        closing ? 'isOut' : '',
-      ].join(' ')}
+      className={['authModal', isOpen ? 'isOpen' : '', closing ? 'isOut' : ''].join(' ')}
       style={panelStyle}
       role="dialog"
       aria-modal="true"

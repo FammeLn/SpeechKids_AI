@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { LOCALES } from '../i18n/locales'
+import { lockHeader, unlockHeader } from './nav/headerLock'
 
 export default function SettingsPopover({ open, onClose, settings, onLocaleChange, onThemeChange, onChange, t }) {
   const panelRef = useRef(null)
@@ -26,6 +27,12 @@ export default function SettingsPopover({ open, onClose, settings, onLocaleChang
 
   useEffect(() => {
     if (!open) setLocaleOpen(false)
+  }, [open])
+
+  useEffect(() => {
+  if (!open) return
+  lockHeader('settings-popover')
+  return () => unlockHeader('settings-popover')
   }, [open])
 
   const yesNo = (v) => (v ? t('common.yes') : t('common.no'))
@@ -121,6 +128,18 @@ export default function SettingsPopover({ open, onClose, settings, onLocaleChang
             {yesNo(settings.reduceMotion)}
           </button>
         </div>
+
+        {/* Show balance in navbar */}
+          <div className="settingsRow">
+            <div className="settingsLabel">{t('settings.showBalance')}</div>
+            <button
+              type="button"
+              className={`settingsBtn ${settings.showBalance ? 'on' : ''}`}
+              onClick={() => onChange({ showBalance: !settings.showBalance })}
+            >
+              {yesNo(settings.showBalance)}
+            </button>
+          </div>
       </div>
     </div>
   )
