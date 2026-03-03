@@ -7,6 +7,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    // Spring сам поймет, что нужно искать по полю email
     Optional<User> findByEmail(String email);
+    Optional<User> findByUserName(String userName);
 }

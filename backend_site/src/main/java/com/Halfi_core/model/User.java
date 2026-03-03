@@ -10,11 +10,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_name", nullable = false)
-    private String userName; // CamelCase
+    @Column(name = "user_name", nullable = false, unique = true)
+    private String userName;
 
     @Column(unique = true, nullable = false)
-    private String email; // Заменили mail на email
+    private String email;
 
     @Column(nullable = false)
     private String password;

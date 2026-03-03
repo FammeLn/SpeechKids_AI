@@ -1,3 +1,4 @@
+
 version: '3.8'
 services:
   db:
@@ -5,17 +6,13 @@ services:
     container_name: halfi-postgres
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: naodf00sazxve_dsopkaslf_dkcopxz29e
-      POSTGRES_DB: halfi_db
+      POSTGRES_USER: HalfiPostgres
+      POSTGRES_PASSWORD: na4uih245huvz13ie9_iovjoid34_23dsacxz
+      POSTGRES_DB: halfi_user_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-
-
-
+      - halfi_user_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  halfi_user_data:
