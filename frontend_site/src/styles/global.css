@@ -437,10 +437,18 @@ html[data-theme-fx="hold"] .card {
 }
 
 /* =========================================================
-   2.3.1 AUTH POPOVER (dropdown under navbar)
+   2.3 NAV POPOVERS (dropdowns under navbar)
+   Единая система классов: navPop + модификаторы
+   - auth:     .navPop.navPop--auth
+   - settings: .navPop.navPop--settings
 ========================================================= */
 
-.authPopover {
+
+/* =========================================================
+   2.3.0 NAV POPOVER BASE
+========================================================= */
+
+.navPop {
   position: fixed;
   top: 76px;      /* 64(navbar) + 2(bar) + 10(gap) */
   right: 18px;
@@ -449,11 +457,11 @@ html[data-theme-fx="hold"] .card {
   pointer-events: none;
 }
 
-.authPopover.open {
+.navPop.open {
   pointer-events: auto;
 }
 
-.authPanel {
+.navPop__panel {
   width: 340px;
   max-width: calc(100vw - 24px);
   padding: 14px;
@@ -468,32 +476,38 @@ html[data-theme-fx="hold"] .card {
   will-change: transform;
 }
 
-.authPopover.open .authPanel {
+.navPop.open .navPop__panel {
   transform: translateY(0);
   box-shadow: 0 12px 28px rgba(0,0,0,.35);
 }
 
+
+/* =========================================================
+   2.3.1 NAV AUTH POPOVER
+   (замена старого .authPopover/.authPanel/... + без конфликтов с page auth)
+========================================================= */
+
 /* ---- inner layout ---- */
 
-.authBody {
+.navPop__body {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.authRow {
+.navPop__row {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.authLabel {
+.navPop__label {
   font-size: 13px;
   font-weight: 650;
   color: var(--text-muted);
 }
 
-.authInput {
+.navPop__input {
   width: 100%;
   padding: 10px 12px;
 
@@ -504,18 +518,18 @@ html[data-theme-fx="hold"] .card {
   color: var(--text-main);
 }
 
-.authInput:focus {
+.navPop__input:focus {
   outline: none;
   border-color: var(--accent);
 }
 
-.authHelper {
+.navPop__helper {
   display: flex;
   justify-content: flex-end;
   margin-top: -4px;
 }
 
-.authLinkBtn {
+.navPop__link {
   border: none;
   background: transparent;
   cursor: pointer;
@@ -528,188 +542,100 @@ html[data-theme-fx="hold"] .card {
   transition: color 140ms ease, transform 140ms ease;
 }
 
-.authLinkBtn:hover {
+.navPop__link:hover {
   color: var(--text-main);
   transform: translateY(-1px);
 }
 
 /* actions */
-.authActions {
+.navPop__actions {
   display: flex;
   gap: 10px;
   margin-top: 4px;
 }
 
-/* Login button: filled accent */
-.btnAccent {
+/* buttons */
+.navPop__btn {
   flex: 1;
   height: 38px;
 
   border-radius: 12px;
-  border: 1px solid var(--accent);
-  background: var(--accent);
-
-  color: #0b0d10;
-  font-weight: 800;
-  cursor: pointer;
-
-  transition: transform 160ms ease, filter 160ms ease;
-}
-
-.btnAccent:hover {
-  transform: scale(1.02);
-  filter: brightness(1.05);
-}
-
-/* Register button: theme bg + accent outline */
-.btnOutline {
-  flex: 1;
-  height: 38px;
-
-  border-radius: 12px;
-  border: 1px solid var(--accent);
-  background: transparent;
-
-  color: var(--text-main);
-  font-weight: 800;
-  cursor: pointer;
-
-  transition: background 160ms ease, transform 160ms ease;
-}
-
-.btnOutline:hover {
-  background: var(--bg-hover);
-  transform: scale(1.02);
-}
-
-/* ---- authorized view ---- */
-
-.authUser {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.authUserName {
-  font-size: 16px;
-  font-weight: 900;
-  letter-spacing: 0.2px;
-}
-
-.authBalance {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-
-  padding-top: 10px;
-  border-top: 1px solid var(--border-main);
-}
-
-.authBalanceLabel {
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 650;
-}
-
-.authBalanceValue {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  font-weight: 900;
-}
-
-.coinIcon {
-  color: #fbbf24; /* жёлтая монетка */
-}
-
-/* menu */
-.authMenu {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  padding-top: 10px;
-  border-top: 1px solid var(--border-main);
-}
-
-.authMenuItem {
-  width: 100%;
-  height: 38px;
-
-  border-radius: 12px;
-  border: 1px solid var(--border-accent);
-  background: transparent;
-
-  color: var(--text-main);
-  cursor: pointer;
   font-weight: 800;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  transition: background 160ms ease, transform 160ms ease;
+  cursor: pointer;
+  transition: transform 160ms ease, filter 160ms ease, background 160ms ease;
 }
 
-.authMenuItem:hover {
+.navPop__btn--accent {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #0b0d10;
+}
+
+.navPop__btn--accent:hover {
+  transform: scale(1.02);
+  filter: brightness(1.05);
+}
+
+.navPop__btn--outline {
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--text-main);
+}
+
+.navPop__btn--outline:hover {
   background: var(--bg-hover);
-  transform: scale(1.01);
+  transform: scale(1.02);
 }
 
-.authMenuItem.danger {
-  border-color: rgba(239, 68, 68, 0.45);
+/* optional small link under buttons (if you keep it) */
+.navPop__ghostLink {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-top: 2px;
+
+  color: var(--text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  align-self: flex-start;
+  transition: color 140ms ease, transform 140ms ease;
 }
 
-.authMenuItem.danger:hover {
-  background: rgba(239, 68, 68, 0.12);
+.navPop__ghostLink:hover {
+  color: var(--text-main);
+  transform: translateY(-1px);
 }
+
 
 /* =========================================================
-   2.3.2 SETTINGS POPOVER (dropdown under navbar)
+   2.3.2 NAV SETTINGS POPOVER
+   (замена старого .settingsPopover/.settingsPanel/...)
 ========================================================= */
 
-.settingsPopover {
-  position: fixed;
-  top: 76px;
-  right: 18px;
-
-  /* чтобы панель не “просвечивала” поверх navbar */
+.navPop--settings {
+  /* как было: "панель не просвечивает поверх navbar" */
   height: 0;
   overflow: visible;
-
-  z-index: 48; /* ниже navbar(50), но выше контента */
-  pointer-events: none;
 }
 
-.settingsPopover.open {
-  pointer-events: auto;
-}
+/* оставляем прежние классы внутренностей settings:
+   .settingsRow/.settingsBtn/.localeWrap/... — они не конфликтуют с auth page */
 
 /* панель "живёт" чуть выше и выезжает вниз */
-.settingsPanel {
-  width: 340px;
-  max-width: calc(100vw - 24px);
-  padding: 14px;
-
-  border: 1px solid var(--border-main);
-  border-radius: 14px;
-  background: var(--bg-secondary);
-
-  /* ЗАКРЫТО: панель физически выше */
-  transform: translateY(-150%);
-  transition: transform 320ms cubic-bezier(.22,.8,.32,1);
-
-  /* чтобы не было мерцаний */
-  will-change: transform;
+.navPop__panel--settings {
+  /* всё уже задано в .navPop__panel,
+     но держим на всякий случай как явный модификатор */
 }
 
-.settingsPopover.open .settingsPanel {
-  transform: translateY(0);
-  box-shadow: 0 12px 28px rgba(0,0,0,.35);
-}
-
+/* строки */
 .settingsRow {
   display: flex;
   align-items: center;
@@ -914,6 +840,7 @@ html[data-hide-navbar="1"][data-header-lock="1"] {
 html[data-hide-navbar="1"][data-header-lock="1"] .headerShell {
   transform: translateY(0);
 }
+
 /* =========================================================
    3 REDUCE MOTION (except loading bar)
 ========================================================= */
@@ -924,17 +851,130 @@ html[data-reduce-motion="1"] * {
 }
 
 /* но loading bar оставляем живой */
-html[data-reduce-motion="1"] .topBar *,
-html[data-reduce-motion="1"] .topBar {
+html[data-reduce-motion="1"] .topBar,
+html[data-reduce-motion="1"] .topBar * {
   transition: initial !important;
 }
 
 /* =========================================================
-   4. AUTH / LOGIN / REGISTER / RECOVER
-   3 формы на одной странице + правый sticky блок
-   + базовые элементы (input/btn/hint/status) для auth UI
+   4.0 AUTH MODAL (auth pages as modal under navbar)
+   /login /register /forgot-password
 ========================================================= */
 
+.authModal {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  pointer-events: auto;
+}
+
+/* body lock + scrollbar compensation (set via JS --sbw) */
+html[data-auth-popover="1"] body {
+  overflow: hidden;
+  padding-right: var(--sbw, 0px);
+}
+
+/* ---------- Backdrop ---------- */
+.authModal__backdrop {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--authNavTop, 76px);
+  bottom: 0;
+
+  background: color-mix(in srgb, black 28%, transparent 72%);
+  z-index: 0;
+  pointer-events: auto;
+
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+.authModal.isOpen .authModal__backdrop {
+  opacity: 1;
+}
+
+.authModal.isOut .authModal__backdrop {
+  opacity: 0;
+  transition-duration: 260ms;
+}
+
+/* ---------- Panel ---------- */
+.authModal__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--authNavTop, 76px);
+  bottom: 0;
+
+  display: grid;
+  place-items: center;
+  padding: 14px 10px;
+
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ---------- Content wrapper (persistent) ---------- */
+.authModal__leftFx {
+  width: min(980px, calc(100vw - 20px));
+  pointer-events: auto;
+
+  will-change: transform, filter, opacity;
+
+  opacity: 0;
+  transform: translateY(14px) scale(0.985);
+  filter: blur(6px);
+
+  transition:
+    transform 520ms cubic-bezier(.16, 1, .24, 1),
+    filter 520ms cubic-bezier(.16, 1, .24, 1),
+    opacity 380ms ease;
+}
+
+.authModal.isOpen .authModal__leftFx {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.authModal.isOut .authModal__leftFx {
+  opacity: 0;
+  transform: translateY(8px) scale(0.992);
+  filter: blur(4px);
+
+  transition:
+    transform 260ms ease,
+    filter 260ms ease,
+    opacity 260ms ease;
+}
+
+/* ---------- Swap between auth urls (ONLY leftFx, because it persists) ---------- */
+
+/* ---------- Swap between auth urls (ONLY left block) ---------- */
+
+/* БАЗА: мягкая инерция */
+.authModal.isOpen .authModal__leftFx .authLeft {
+  will-change: transform, filter, opacity;
+  transition:
+    transform 520ms cubic-bezier(.2, .9, .2, 1),
+    filter 520ms cubic-bezier(.2, .9, .2, 1),
+    opacity 380ms ease;
+}
+
+/* SWAP: лёгкий “дох” вместо дерзкого пинка */
+.authModal.isOpen .authModal__leftFx.isSwap .authLeft {
+  opacity: 0.96;
+  transform: translateY(6px) scale(0.996);
+  filter: blur(1.0px);
+}
+
+/* reduce motion */
+html[data-reduce-motion="1"] .authModal.isOpen .authModal__leftFx.isSwap .authLeft {
+  transform: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
 
 /* =========================================================
    4.1 AUTH LAYOUT
@@ -963,7 +1003,6 @@ html[data-reduce-motion="1"] .topBar {
   top: 12px;
   align-self: start;
 
-  /* чтобы правая колонка была по высоте как левая */
   height: 560px;
 
   display: flex;
@@ -1016,7 +1055,6 @@ html[data-reduce-motion="1"] .topBar {
   min-height: 0;
   overflow: auto;
 
-  /* теперь docs в отдельной карточке, разделитель не нужен */
   padding-top: 0;
   border-top: 0;
 }

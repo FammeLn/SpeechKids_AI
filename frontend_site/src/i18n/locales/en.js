@@ -34,8 +34,8 @@ export default {
   // register page
   registerTitle: 'Sign up',
   confirmPassword: 'Confirm password',
-  username: 'Username',
-  usernameHint: 'At least 3 characters',
+  nickname: 'Username',
+  nicknameHint: 'At least 3 characters',
   passwordHint: 'At least 8 characters',
   passwordMismatch: 'Passwords do not match',
 
@@ -66,6 +66,7 @@ export default {
   loginSubtitle: 'Welcome back — backend connection will be added later.',
   loginBtn: 'Sign in',
   loginStub: 'Demo: sign in (no backend yet).',
+  badCredentials: 'Wrong email or password',
 
   // recover
   recoverTitle: 'Password recovery',

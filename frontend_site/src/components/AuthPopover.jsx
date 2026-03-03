@@ -1,40 +1,35 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Coins } from 'lucide-react'
 
-export default function AuthPopover({ open, onClose, onLogin, user, onLogout }) {
+/**
+ * onTryLogin: async ({ email, password }) => ({ ok: true } | { ok: false, reason?: 'email'|'password'|'credentials' })
+ * user: truthy => already logged in
+ */
+export default function AuthPopover({ open, onClose, user, onTryLogin }) {
   const navigate = useNavigate()
   const panelRef = useRef(null)
 
-  // таймер, чтобы менять user ПОСЛЕ анимации закрытия
+  // таймер, чтобы навигация была ПОСЛЕ анимации закрытия
   const closeTimerRef = useRef(null)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
-  // helper: закрыть поповер и выполнить действие после анимации
   const closeThen = (fn) => {
     onClose?.()
-
-    // время должно совпадать с transition у .authPanel (у тебя 320ms)
     if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current)
-    closeTimerRef.current = window.setTimeout(() => {
-      fn?.()
-    }, 340)
+    closeTimerRef.current = window.setTimeout(() => fn?.(), 340) // совпадает с 320ms transition
   }
 
   // закрытие: ESC + клик вне
   useEffect(() => {
     if (!open) return
 
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose?.()
-    }
+    const onKey = (e) => e.key === 'Escape' && onClose?.()
 
     const onClick = (e) => {
-      // клик по кнопке пользователя не считаем "вне"
       if (e.target.closest('[data-auth-btn="1"]')) return
-
       if (!panelRef.current) return
       if (!panelRef.current.contains(e.target)) onClose?.()
     }
@@ -47,58 +42,93 @@ export default function AuthPopover({ open, onClose, onLogin, user, onLogout }) 
     }
   }, [open, onClose])
 
-  // очистка таймера на размонтировании
   useEffect(() => {
     return () => {
       if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current)
     }
   }, [])
 
-  const submit = (e) => {
+  const goRegister = () => closeThen(() => navigate('/register'))
+  const goRecover = () => closeThen(() => navigate('/forgot-password'))
+
+  const submit = async (e) => {
     e.preventDefault()
+    if (submitting) return
 
-    const nextUser = {
-      name: email?.split('@')?.[0] || 'User',
-      avatarUrl: 'https://i.pravatar.cc/80?img=12',
-      balance: 1250,
+    const payload = { email: email.trim(), password }
+    setSubmitting(true)
+
+    try {
+      // 1) пробуем быстрый логин
+      const res = await onTryLogin?.(payload)
+
+      if (res?.ok) {
+        // успех: закрываем и остаёмся (или можно вести в /account)
+        closeThen(() => {
+          // если хочешь редирект после успеха:
+          // navigate('/account')
+        })
+        return
+      }
+
+      // 2) ошибка: сохраняем ввод и ведём на /login
+      closeThen(() =>
+        navigate('/login', {
+          state: {
+            prefillEmail: payload.email,
+            prefillPassword: payload.password,
+            authError: res?.reason || 'credentials',
+          },
+        })
+      )
+    } catch {
+      // 3) на всякий случай: тоже на /login, но с общей ошибкой
+      closeThen(() =>
+        navigate('/login', {
+          state: {
+            prefillEmail: payload.email,
+            prefillPassword: payload.password,
+            authError: 'network',
+          },
+        })
+      )
+    } finally {
+      // если мы закрыли поповер — он размонтируется/скроется, но ок оставить
+      setSubmitting(false)
     }
-
-    closeThen(() => {
-      onLogin?.(nextUser)
-    })
   }
-
-  const goRegister = () => {
-    closeThen(() => navigate('/register'))
-  }
-
-  const goRecover = () => {
-    closeThen(() => navigate('/recover'))
-  }
-
-  const goAccount = () => {
-    closeThen(() => navigate('/account'))
-  }
-
-  const doLogout = () => {
-    closeThen(() => {
-      onLogout?.()
-    })
-  }
-
-  const displayName = user?.name || 'User'
-  const balance = typeof user?.balance === 'number' ? user.balance : 0
 
   return (
-    <div className={`authPopover ${open ? 'open' : ''}`}>
-      <div className="authPanel" ref={panelRef} aria-hidden={!open}>
-        {/* НЕ АВТОРИЗОВАН */}
-        {!user && (
-          <form className="authBody" onSubmit={submit}>
-            <div className="authRow">
-              <label className="authLabel">Почта</label>
+    <div className={`navPop navPop--auth ${open ? 'open' : ''}`}>
+      <div className="navPop__panel navPop__panel--auth" ref={panelRef} aria-hidden={!open}>
+        {user ? (
+          <div className="navPop__body">
+            <div className="navPop__title">Вы уже вошли</div>
+
+            <div className="navPop__actions">
+              <button
+                type="button"
+                className="navPop__btn navPop__btn--accent"
+                onClick={() => closeThen(() => navigate('/account'))}
+              >
+                Аккаунт
+              </button>
+
+              <button
+                type="button"
+                className="navPop__btn navPop__btn--outline"
+                onClick={onClose}
+              >
+                Закрыть
+              </button>
+            </div>
+          </div>
+        ) : (
+          <form className="navPop__body" onSubmit={submit}>
+            <div className="navPop__row">
+              <label className="navPop__label">Почта</label>
               <input
-                className="authInput"
+                className="navPop__input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
@@ -106,10 +136,10 @@ export default function AuthPopover({ open, onClose, onLogin, user, onLogout }) 
               />
             </div>
 
-            <div className="authRow">
-              <label className="authLabel">Пароль</label>
+            <div className="navPop__row">
+              <label className="navPop__label">Пароль</label>
               <input
-                className="authInput"
+                className="navPop__input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
@@ -118,49 +148,31 @@ export default function AuthPopover({ open, onClose, onLogin, user, onLogout }) 
               />
             </div>
 
-            <div className="authHelper">
-              <button type="button" className="authLinkBtn" onClick={goRecover}>
+            <div className="navPop__helper">
+              <button type="button" className="navPop__link" onClick={goRecover}>
                 Забыли пароль?
               </button>
             </div>
 
-            <div className="authActions">
-              <button className="btnAccent" type="submit">
-                Войти
+            <div className="navPop__actions">
+              <button
+                type="submit"
+                className="navPop__btn navPop__btn--accent"
+                disabled={submitting}
+              >
+                {submitting ? '...' : 'Войти'}
               </button>
 
-              <button className="btnOutline" type="button" onClick={goRegister}>
+              <button
+                type="button"
+                className="navPop__btn navPop__btn--outline"
+                onClick={goRegister}
+                disabled={submitting}
+              >
                 Регистрация
               </button>
             </div>
           </form>
-        )}
-
-        {/* АВТОРИЗОВАН */}
-        {!!user && (
-          <div className="authBody">
-            <div className="authUser">
-              <div className="authUserName">{displayName}</div>
-
-              <div className="authBalance">
-                <div className="authBalanceLabel">Баланс</div>
-                <div className="authBalanceValue">
-                  <Coins size={16} className="coinIcon" />
-                  {balance}
-                </div>
-              </div>
-            </div>
-
-            <div className="authMenu">
-              <button type="button" className="authMenuItem" onClick={goAccount}>
-                Аккаунт
-              </button>
-
-              <button type="button" className="authMenuItem danger" onClick={doLogout}>
-                Выйти
-              </button>
-            </div>
-          </div>
         )}
       </div>
     </div>

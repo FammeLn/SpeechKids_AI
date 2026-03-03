@@ -32,8 +32,8 @@ export default function SettingsPopover({ open, onClose, settings, onLocaleChang
   const localeShort = settings.locale === 'ru' ? t('locale.ruShort') : t('locale.enShort')
 
   return (
-    <div className={`settingsPopover ${open ? 'open' : ''}`}>
-      <div className="settingsPanel" ref={panelRef}>
+    <div className={`navPop navPop--settings ${open ? 'open' : ''}`}>
+      <div className="navPop__panel navPop__panel--settings" ref={panelRef}>
         {/* Locale */}
         <div className="settingsRow">
           <div className="settingsLabel">{t('settings.locale')}</div>

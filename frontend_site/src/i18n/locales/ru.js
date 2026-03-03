@@ -34,8 +34,8 @@ auth: {
   // register page
   registerTitle: 'Регистрация',
   confirmPassword: 'Подтверждение пароля',
-  username: 'Имя пользователя',
-  usernameHint: 'Минимум 3 символа',
+  nickname: 'Имя пользователя',
+  nicknameHint: 'Минимум 3 символа',
   passwordHint: 'Минимум 8 символов',
   passwordMismatch: 'Пароли не совпадают',
 
@@ -66,6 +66,7 @@ auth: {
   loginSubtitle: 'Рады видеть снова — подключение к бэку добавим позже.',
   loginBtn: 'Войти',
   loginStub: 'Демо: вход (пока без бэка).',
+  badCredentials: 'Неверная почта или пароль',
 
   // recover
   recoverTitle: 'Восстановление пароля',
