@@ -1,5 +1,5 @@
 # Halfi Core Backend
-
+нужно скачать плагин lombok
 ## 📂 Структура проекта
 
 ``` 
@@ -49,8 +49,7 @@ Frontend: localhost:5173
 
 ⚙️ Настройка окружения (Environment)
 Основные параметры в application.yml:
-
-spring.datasource.url: jdbc:postgresql://localhost:5433/halfi_db
+b
 
 spring.kafka.bootstrap-servers: localhost:9092
 
