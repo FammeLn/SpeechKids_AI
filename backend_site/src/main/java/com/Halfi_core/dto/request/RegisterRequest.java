@@ -17,7 +17,7 @@ public class RegisterRequest {
             message = "Некорректный формат почты")
     private String email;
 
-    @NotBlank(message = "Пароль не может быть пустым")
+    @NotBlank(message = "Пароль обязателен")
     @Size(min = 8, message = "Пароль должен быть не менее 8 символов")
-    private String password;
+    private String password; // Пойдет в User
 }

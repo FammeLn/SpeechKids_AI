@@ -4,26 +4,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Отключаем CSRF для REST API
-                .cors(Customizer.withDefaults()) // Включаем поддержку CORS
+                .csrf(csrf -> csrf.disable()) // Важно для POST-запросов из React
+                .cors(Customizer.withDefaults()) // Разрешает запросы с других портов (5173)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll() // Разрешаем доступ к логину и регистрации
-                        .anyRequest().authenticated() // Все остальные запросы требуют входа
+                        .requestMatchers("/api/auth/**").permitAll() // РАЗРЕШАЕМ ВСЁ В ЭТОЙ ПАПКЕ
+                        .anyRequest().authenticated()
                 );
         return http.build();
     }

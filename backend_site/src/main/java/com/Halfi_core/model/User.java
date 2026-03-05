@@ -1,32 +1,31 @@
 package com.Halfi_core.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
+import lombok.*;
 @Entity
 @Table(name = "users")
+@Getter // Генерирует все геттеры
+@Setter // Генерирует все сеттеры
+@NoArgsConstructor // Генерирует пустой конструктор для Hibernate
+@AllArgsConstructor // Генерирует конструктор со всеми полями
+
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_name", nullable = false, unique = true)
-    private String userName;
+    @Column(nullable = false)
+    private String password;
 
     @Column(unique = true, nullable = false)
     private String email;
 
-    public User() {}
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private UserProfile profile;
 
-    // Геттеры и сеттеры теперь строго соответствуют именам переменных
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getUserName() { return userName; }
-    public void setUserName(String userName) { this.userName = userName; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-
+    // Новые поля для безопасности
+    private boolean enabled = false; // По умолчанию выключен
+    private String verificationCode;
 }
