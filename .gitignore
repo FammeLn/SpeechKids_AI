@@ -1,5 +1,63 @@
-# Исключенные пути проекта
-/.gradle/
-/build/
-/out/
-/untitled/target/
+# =========================================================
+# ROOT
+# =========================================================
+
+.DS_Store
+Thumbs.db
+
+# =========================================================
+# IDE / EDITORS
+# =========================================================
+
+.vscode/
+.idea/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# =========================================================
+# LOGS
+# =========================================================
+
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# =========================================================
+# FRONTEND (Vite / React)
+# =========================================================
+
+frontend_site/node_modules/
+frontend_site/dist/
+frontend_site/dist-ssr/
+frontend_site/*.local
+
+# private files
+frontend.snapshot.md
+
+# =========================================================
+# BACKEND (Gradle / Spring Boot / Kotlin / Java)
+# =========================================================
+
+backend_site/build/
+backend_site/.gradle/
+backend_site/out/
+backend_site/bin/
+
+# optional: IntelliJ / Java artifacts
+backend_site/*.class
+
+# =========================================================
+# ENV
+# =========================================================
+
+*.env
+*.env.local
+*.env.*.local

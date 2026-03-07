@@ -62,7 +62,7 @@ html[data-theme="dark"] {
 }
 
 * { box-sizing: border-box; }
-html, body { height: 100%; }
+html, body, #root { height: 100%; }
 
 body {
   margin: 0;
@@ -430,10 +430,17 @@ html[data-theme-fx="hold"] .card {
   height: var(--header-height);
 }
 
-/* Контент отступает под фикс-хедер */
+/* Контент под фикс-хедер */
 .app {
+  min-height: 100%;
   padding-top: var(--app-top);
   transition: padding-top 220ms ease;
+}
+
+/* main должен уметь растягивать full-width страницы */
+.app > main {
+  width: 100%;
+  min-width: 0;
 }
 
 /* =========================================================
@@ -1632,6 +1639,23 @@ html[data-reduce-motion="1"] .authModal.isOpen .authModal__leftFx .authLeft {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-soft) 30%, transparent 70%);
 }
 
+
+/* =========================================================
+   5. PAGE SHELLS
+   Обёртки для обычных и полноширинных страниц
+========================================================= */
+
+.pageShell {
+  width: 100%;
+  min-width: 0;
+}
+
+.pageShell--full {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
 /* =========================================================
    X UTILITIES
 ========================================================= */

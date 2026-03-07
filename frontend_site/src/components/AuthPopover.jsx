@@ -6,7 +6,13 @@ import { lockHeader, unlockHeader } from './nav/headerLock'
  * onTryLogin: async ({ email, password }) => ({ ok: true } | { ok: false, reason?: 'email'|'password'|'credentials' })
  * user: truthy => already logged in
  */
-export default function AuthPopover({ open, onClose, user, onTryLogin }) {
+export default function AuthPopover({
+  open,
+  onClose,
+  user,
+  onTryLogin,
+  t = (k) => k,
+}) {
   const navigate = useNavigate()
   const location = useLocation()
   const panelRef = useRef(null)
@@ -16,6 +22,11 @@ export default function AuthPopover({ open, onClose, user, onTryLogin }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
+
+  const tt = (key, fallback) => {
+    const value = t(key)
+    return value === key ? fallback : value
+  }
 
   // закрытие: ESC + клик вне
   useEffect(() => {
@@ -44,21 +55,21 @@ export default function AuthPopover({ open, onClose, user, onTryLogin }) {
   }, [])
 
   useEffect(() => {
-  if (!open) return
-  lockHeader('auth-popover')
-  return () => unlockHeader('auth-popover')
-}, [open])
+    if (!open) return
+    lockHeader('auth-popover')
+    return () => unlockHeader('auth-popover')
+  }, [open])
 
   const openBig = (path, state = {}) => {
     // Открываем большой модал “поверх” текущей страницы
     navigate(path, {
       state: {
-        backgroundLocation: location, // <- ключ к “не уходим со страницы”
+        backgroundLocation: location,
         ...state,
       },
     })
 
-    // Маленький закрываем параллельно (не ждём 340ms)
+    // Маленький закрываем параллельно
     onClose?.()
   }
 
@@ -76,12 +87,10 @@ export default function AuthPopover({ open, onClose, user, onTryLogin }) {
       const res = await onTryLogin?.(payload)
 
       if (res?.ok) {
-        // успех: просто закрываем маленький, большой не открываем
         onClose?.()
         return
       }
 
-      // ошибка: открываем /login поверх текущей страницы и показываем ошибку
       openBig('/login', {
         prefillEmail: payload.email,
         prefillPassword: payload.password,
@@ -103,7 +112,9 @@ export default function AuthPopover({ open, onClose, user, onTryLogin }) {
       <div className="navPop__panel navPop__panel--auth" ref={panelRef} aria-hidden={!open}>
         {user ? (
           <div className="navPop__body">
-            <div className="navPop__title">Вы уже вошли</div>
+            <div className="navPop__title">
+              {tt('auth.alreadyLoggedIn', 'Вы уже вошли')}
+            </div>
 
             <div className="navPop__actions">
               <button
@@ -114,18 +125,22 @@ export default function AuthPopover({ open, onClose, user, onTryLogin }) {
                   navigate('/account')
                 }}
               >
-                Аккаунт
+                {t('auth.account')}
               </button>
 
-              <button type="button" className="navPop__btn navPop__btn--outline" onClick={onClose}>
-                Закрыть
+              <button
+                type="button"
+                className="navPop__btn navPop__btn--outline"
+                onClick={onClose}
+              >
+                {tt('common.close', 'Закрыть')}
               </button>
             </div>
           </div>
         ) : (
           <form className="navPop__body" onSubmit={submit}>
             <div className="navPop__row">
-              <label className="navPop__label">Почта</label>
+              <label className="navPop__label">{t('auth.email')}</label>
               <input
                 className="navPop__input"
                 value={email}
@@ -136,7 +151,7 @@ export default function AuthPopover({ open, onClose, user, onTryLogin }) {
             </div>
 
             <div className="navPop__row">
-              <label className="navPop__label">Пароль</label>
+              <label className="navPop__label">{t('auth.password')}</label>
               <input
                 className="navPop__input"
                 value={password}
@@ -149,17 +164,26 @@ export default function AuthPopover({ open, onClose, user, onTryLogin }) {
 
             <div className="navPop__helper">
               <button type="button" className="navPop__link" onClick={goRecover}>
-                Забыли пароль?
+                {t('auth.forgot')}
               </button>
             </div>
 
             <div className="navPop__actions">
-              <button type="submit" className="navPop__btn navPop__btn--accent" disabled={submitting}>
-                {submitting ? '...' : 'Войти'}
+              <button
+                type="submit"
+                className="navPop__btn navPop__btn--accent"
+                disabled={submitting}
+              >
+                {submitting ? '...' : t('auth.login')}
               </button>
 
-              <button type="button" className="navPop__btn navPop__btn--outline" onClick={goRegister} disabled={submitting}>
-                Регистрация
+              <button
+                type="button"
+                className="navPop__btn navPop__btn--outline"
+                onClick={goRegister}
+                disabled={submitting}
+              >
+                {t('auth.register')}
               </button>
             </div>
           </form>

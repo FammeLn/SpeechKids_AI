@@ -37,9 +37,9 @@ export default function Navbar({ user, settings, onOpenAuth, onOpenSettings, t =
               {t('nav.about')}
             </Link>
 
-            <Link to="/friends" className={isActive('/friends') ? 'navLink active' : 'navLink'}>
+            <Link to="/employees" className={isActive('/employees') ? 'navLink active' : 'navLink'}>
               <Users size={16} />
-              {t('nav.friends')}
+              {t('nav.employees')}
             </Link>
 
             <Link to="/sandbox" className={isActive('/sandbox') ? 'navLink active' : 'navLink'}>

@@ -31,7 +31,7 @@ export default function Layout({ children }) {
   const content = isValidElement(children) ? cloneElement(children, { t }) : children
 
   // ---------- Locale FX ----------
-  const [localeFx, setLocaleFx] = useState('off') // 'off' | 'in' | 'out'
+  const [localeFx, setLocaleFx] = useState('off')
   const localeFxTimersRef = useRef([])
 
   const clearLocaleFxTimers = () => {
@@ -57,13 +57,11 @@ export default function Layout({ children }) {
       }, 250)
     )
 
-    localeFxTimersRef.current.push(
-      setTimeout(() => setLocaleFx('off'), 500)
-    )
+    localeFxTimersRef.current.push(setTimeout(() => setLocaleFx('off'), 500))
   }
 
   // ---------- Theme FX ----------
-  const [themeFx, setThemeFx] = useState('off') // 'off' | 'in' | 'hold' | 'out'
+  const [themeFx, setThemeFx] = useState('off')
   const themeFxTimersRef = useRef([])
 
   const clearThemeFxTimers = () => {
@@ -93,9 +91,7 @@ export default function Layout({ children }) {
       }, 250)
     )
 
-    themeFxTimersRef.current.push(
-      setTimeout(() => setThemeFx('out'), 750)
-    )
+    themeFxTimersRef.current.push(setTimeout(() => setThemeFx('out'), 750))
 
     themeFxTimersRef.current.push(
       setTimeout(() => {
@@ -105,13 +101,11 @@ export default function Layout({ children }) {
     )
   }
 
-  // cleanup timers on unmount
   useEffect(() => {
     return () => {
       clearLocaleFxTimers()
       clearThemeFxTimers()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ---------- Loading bar ----------
@@ -127,9 +121,12 @@ export default function Layout({ children }) {
     return () => clearTimeout(timerId)
   }, [location.pathname])
 
+  const bgPath = location.state?.backgroundLocation?.pathname
+  const currentPath = bgPath || location.pathname
+  const isEmployeesPage = currentPath.startsWith('/employees')
+
   return (
     <div>
-      {/* overlays outside .app */}
       <div className={`localeFxOverlay ${localeFx}`} aria-hidden={localeFx === 'off'} />
       <div className={`themeFxOverlay ${themeFx}`} aria-hidden={themeFx === 'off'} />
 
@@ -157,7 +154,7 @@ export default function Layout({ children }) {
           t={t}
         />
 
-        <main className="container">
+        <main className={isEmployeesPage ? 'pageShell pageShell--full' : 'container'}>
           {content}
         </main>
 
@@ -165,9 +162,8 @@ export default function Layout({ children }) {
           open={drawerOpen}
           onClose={closeDrawer}
           user={user}
+          t={t}
           onTryLogin={async ({ email, password }) => {
-            // TODO: подключить реальный API
-            // Верни сюда свою логику
             return { ok: false, reason: 'credentials' }
           }}
         />

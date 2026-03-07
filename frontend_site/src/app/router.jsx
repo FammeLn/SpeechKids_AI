@@ -1,6 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import About from '../pages/About'
-import Friends from '../pages/Friends'
+import EmployeesPage from '../pages/employees/EmployeesPage'
 import Sandbox from '../pages/Sandbox'
 import NotFound from '../pages/NotFound'
 
@@ -18,7 +18,7 @@ export default function RouterView({ t }) {
       {/* 1) Фоновые роуты (если есть bg — рендерим фон по bg) */}
       <Routes location={bg || location}>
         <Route path="/" element={<About t={t} />} />
-        <Route path="/friends" element={<Friends t={t} />} />
+        <Route path="/employees" element={<EmployeesPage t={t} />} />
         <Route path="/sandbox" element={<Sandbox t={t} />} />
 
         {/* auth также должен рендериться при прямом заходе без bg */}

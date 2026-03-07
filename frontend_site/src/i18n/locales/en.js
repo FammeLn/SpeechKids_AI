@@ -1,7 +1,7 @@
 export default {
   nav: {
     about: 'About',
-    friends: 'Employees',
+    employees: 'Employees',
     sandbox: 'Rooms',
   },
   settings: {
@@ -17,6 +17,7 @@ export default {
     no: 'No',
     light: 'Light',
     dark: 'Dark',
+    close: 'Close',
   },
   auth: {
   email: 'Email',
@@ -27,6 +28,7 @@ export default {
   account: 'Account',
   logout: 'Log out',
   balance: 'Balance',
+  alreadyLoggedIn: 'You are already signed in',
 
   // generic
   required: 'Required',
@@ -82,6 +84,38 @@ export default {
   promosTerms: 'Promo terms',
   docsStub: 'These are placeholders for now. Later we’ll add pages/modals and i18n links.',
 },
+
+employees: {
+  title: 'Employees',
+  sidebar: {
+    quickAccess: 'Quick access',
+    freeAgents: 'Free AI agent',
+    agent: 'Agent',
+    scaling: 'Scalable',
+    myEmployees: 'My employees',
+    stats: 'Statistics',
+    management: 'Management',
+    catalog: 'Catalog',
+    public: 'Public',
+    published: 'Published by me',
+    apps: 'Apps',
+    settings: 'Settings',
+    collapse: 'Collapse',
+    expand: 'Expand',
+  },
+  placeholders: {
+    overview: 'The employees section is ready for future content.',
+    empty: 'This section is empty for now. Content will be added later.',
+    stats: 'Employee statistics will appear here later.',
+    management: 'Employee management tools will appear here later.',
+    public: 'The public employees catalog will appear here later.',
+    published: 'Employees published by me will appear here later.',
+    apps: 'Apps and integrations will appear here later.',
+    settings: 'Employees page settings will appear here later.',
+  },
+},
+
+
   locale: {
     ruName: 'Russian',
     enName: 'English',
