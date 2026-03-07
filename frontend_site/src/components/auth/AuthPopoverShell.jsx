@@ -13,7 +13,7 @@ export default function AuthPopoverShell() {
   const closeTimerRef = useRef(null)
   const swapTimerRef = useRef(null)
 
-  const navTop = 76
+  const navTop = 66
   const panelStyle = useMemo(() => ({ '--authNavTop': `${navTop}px` }), [navTop])
 
   // BACKGROUND (для modal-routes паттерна)

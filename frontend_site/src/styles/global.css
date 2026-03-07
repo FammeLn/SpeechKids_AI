@@ -626,15 +626,6 @@ html[data-theme-fx="hold"] .card {
   overflow: visible;
 }
 
-/* оставляем прежние классы внутренностей settings:
-   .settingsRow/.settingsBtn/.localeWrap/... — они не конфликтуют с auth page */
-
-/* панель "живёт" чуть выше и выезжает вниз */
-.navPop__panel--settings {
-  /* всё уже задано в .navPop__panel,
-     но держим на всякий случай как явный модификатор */
-}
-
 /* строки */
 .settingsRow {
   display: flex;
@@ -991,7 +982,7 @@ html[data-reduce-motion="1"] .topBar * {
 /* body lock + scrollbar compensation (set via JS --sbw) */
 html[data-auth-popover="1"] body {
   overflow: hidden;
-  padding-right: var(--sbw, 0px);
+  padding-right: 0;
 }
 
 /* ---------- Backdrop ---------- */
@@ -1022,13 +1013,24 @@ html[data-auth-popover="1"] body {
   inset: 0;
 
   display: grid;
-  place-items: center;
+  justify-items: center;
+  align-content: start;
+
   padding: 14px 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   z-index: 1;
-
-  /* чтобы клики по “пустоте” уходили в backdrop */
   pointer-events: none;
+
+  /* скрываем системный скролл, но сохраняем прокрутку */
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* old Edge/IE */
+}
+
+.authModal__panel::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 /* ---------- Content wrapper (persistent) ---------- */
@@ -1127,6 +1129,7 @@ html[data-reduce-motion="1"] .authModal.isOpen .authModal__leftFx .authLeft {
   align-self: start;
 
   height: 560px;
+  max-height: calc(100dvh - var(--authNavTop, 76px) - 40px);
 
   display: flex;
   flex-direction: column;
@@ -1146,7 +1149,10 @@ html[data-reduce-motion="1"] .authModal.isOpen .authModal__leftFx .authLeft {
   padding: 14px;
 
   height: 560px;
-  overflow: hidden;
+  max-height: calc(100dvh - var(--authNavTop, 76px) - 40px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
 
   display: flex;
   flex-direction: column;
@@ -1186,6 +1192,24 @@ html[data-reduce-motion="1"] .authModal.isOpen .authModal__leftFx .authLeft {
 .authTitle { margin: 0; font-size: 22px; }
 .authSubtitle { margin: 6px 0 0; }
 
+/* =========================================================
+   4.2.1 AUTH SMALL HEIGHT
+   Если экран низкий — убираем жесткую “визуальную” высоту
+========================================================= */
+
+@media (max-height: 760px) {
+  .authRight {
+    position: static;
+    height: auto;
+    max-height: none;
+  }
+
+  .authFormCard {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+  }
+}
 
 /* =========================================================
    4.3 FIELDS
