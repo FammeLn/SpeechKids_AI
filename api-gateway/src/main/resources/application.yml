@@ -1,0 +1,26 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service-route
+          uri: http://auth-service:8080 
+          predicates:
+            - Path=/api/auth/** 
+        - id: user-service-route
+          uri: http://user-service:8080
+          predicates:
+            - Path=/api/user/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always

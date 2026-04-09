@@ -1,0 +1,21 @@
+services:
+  auth-service:
+    build:
+      context: ../../auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "8084:8080" # Открываем для прямых тестов в Postman (хотя Gateway работает на 8081)
+    networks:
+      - halfi_network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      # Настройки для подключения к базе postgres (база должна быть запущена!)
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/halfi_db
+      - SPRING_DATASOURCE_USERNAME=halfi
+      - SPRING_DATASOURCE_PASSWORD=halfi_password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+networks:
+  halfi_network:
+    external: true

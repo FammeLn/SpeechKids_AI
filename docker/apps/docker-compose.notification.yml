@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  notification-service:
+    build:
+      context: ../../notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    ports:
+      - "8083:8083"
+    networks:
+      - halfi_network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      # SMTP настройки для Google (нужно заполнить реальным "Паролем приложений" Google)
+      - EMAIL_USERNAME=aleksandrkim876@gmail.com
+      - EMAIL_PASSWORD=yuphcckgqqaowsnu
+
+networks:
+  halfi_network:
+    external: true
