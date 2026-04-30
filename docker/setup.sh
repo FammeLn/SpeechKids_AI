@@ -33,4 +33,13 @@ docker compose -f docker/apps/docker-compose.auth.yml up --build -d
 echo "Сборка и запуск Notification Service..."
 docker compose -f docker/apps/docker-compose.notification.yml up --build -d
 
+echo "Сборка и запуск Profile Service..."
+docker compose -f docker/apps/docker-compose.profile.yml up --build -d
+
+# 3. Запуск миниторинговых сервисов
+docker compose -f docker/monitoring/docker-compose.yml  up --build -d
+
+
 echo "Готово! Все сервисы запущены."
+
+

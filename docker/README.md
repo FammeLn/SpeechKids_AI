@@ -18,7 +18,7 @@ bash docker/setup.sh
 ```powershell
 docker network create halfi_network
 ```
-
+ 
 ### 2. Сборка всех JAR-файлов
 ```powershell
 .\gradlew.bat bootJar -x test
@@ -39,7 +39,7 @@ docker-compose -f docker/apps/docker-compose.auth.yml up --build -d
 ```
 ### 5. Просмотр таблицы 
 docker exec -it postgres psql -U halfi -d halfi_db
---- SELECT * FROM users;
+SELECT * FROM users;
 
 ## 🧹 Очистка и удаление
 Чтобы остановить всё и **полностью удалить данные базы** (сброс):

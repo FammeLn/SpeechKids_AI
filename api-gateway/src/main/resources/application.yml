@@ -15,12 +15,21 @@ spring:
           uri: http://user-service:8080
           predicates:
             - Path=/api/user/**
+        - id: profile-service-route
+          uri: http://profile-service:8080
+          predicates:
+            - Path=/api/profile/**
 
 management:
   endpoints:
     web:
       exposure:
-        include: health, info
+        include: health, info, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
   endpoint:
     health:
       show-details: always
+    prometheus:
+      enabled: true

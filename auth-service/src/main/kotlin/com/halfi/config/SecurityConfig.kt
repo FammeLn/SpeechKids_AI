@@ -21,6 +21,7 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers("/api/auth/**").permitAll()
+                auth.requestMatchers("/internal/**").permitAll() // Межсервисный API (закрыт через Gateway)
                 auth.requestMatchers("/actuator/**").permitAll()
                 auth.requestMatchers("/error").permitAll() // Позволяет видеть реальные ошибки вместо 403
                 auth.anyRequest().authenticated()

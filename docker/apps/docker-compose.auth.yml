@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: auth-service
     ports:
-      - "8084:8080" # Открываем для прямых тестов в Postman (хотя Gateway работает на 8081)
+      - "8085:8080" # Открываем для прямых тестов в Postman (Gateway на 8081, 8084 занят profile-service)
     networks:
       - halfi_network
     environment:

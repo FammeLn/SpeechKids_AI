@@ -31,8 +31,10 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    //  Наблюдаемость
+    // Наблюдаемость
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("com.github.loki4j:loki-logback-appender:1.5.0")
 
     // Тестирование
     testImplementation("org.springframework.boot:spring-boot-starter-test")

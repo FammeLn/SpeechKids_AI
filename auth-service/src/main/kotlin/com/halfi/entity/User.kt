@@ -31,5 +31,8 @@ class User(
     var codeExpiresAt: java.util.Date? = null,
 
     @Column(nullable = false)
-    var enabled: Boolean = false
+    var enabled: Boolean = false,
+
+    @Column
+    var lastActivityAt: java.time.LocalDateTime? = null
 )

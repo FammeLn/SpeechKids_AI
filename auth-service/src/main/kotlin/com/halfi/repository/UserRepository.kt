@@ -10,4 +10,6 @@ import java.util.UUID
 interface UserRepository : JpaRepository<User, UUID> {
     fun findByEmail(email: String): User?
     fun existsByEmail(email: String): Boolean
+    fun findAllByEnabledTrue(): List<User>
+    fun countByLastActivityAtAfter(dateTime: java.time.LocalDateTime): Long
 }

@@ -191,6 +191,7 @@ class AuthService(
         val refreshToken = jwtService.generateRefreshToken(user)
 
         user.refreshToken = refreshToken
+        user.lastActivityAt = java.time.LocalDateTime.now()
         userRepository.save(user)
 
         return LoginResponse(
@@ -199,5 +200,12 @@ class AuthService(
             userId = user.id.toString(),
             role = user.role
         )
+    }
+
+    @Transactional
+    fun updateActivity(email: String) {
+        val user = userRepository.findByEmail(email) ?: return
+        user.lastActivityAt = java.time.LocalDateTime.now()
+        userRepository.save(user)
     }
 }

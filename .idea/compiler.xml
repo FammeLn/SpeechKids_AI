@@ -16,10 +16,13 @@
         </processorPath>
         <module name="Halfi_core.user-service.main" />
         <module name="Halfi_core.notification-service.main" />
+        <module name="Halfi_core.payment-service.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="21">
+      <module name="payment-service" target="24" />
       <module name="reactive-kafka-k8s" target="17" />
+      <module name="status-service" target="24" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -28,7 +31,6 @@
       <module name="Halfi_core.api-gateway.main" options="-parameters" />
       <module name="Halfi_core.api-gateway.test" options="-parameters" />
       <module name="Halfi_core.auth-service" options="-parameters" />
-      <module name="Halfi_core.auth-service-beta" options="-parameters" />
       <module name="Halfi_core.auth-service.main" options="-parameters" />
       <module name="Halfi_core.auth-service.test" options="-parameters" />
       <module name="Halfi_core.backend-site.main" options="-parameters" />
@@ -38,6 +40,12 @@
       <module name="Halfi_core.notification-service" options="-parameters" />
       <module name="Halfi_core.notification-service.main" options="-parameters" />
       <module name="Halfi_core.notification-service.test" options="-parameters" />
+      <module name="Halfi_core.payment-service" options="-parameters" />
+      <module name="Halfi_core.payment-service.main" options="-parameters" />
+      <module name="Halfi_core.payment-service.test" options="-parameters" />
+      <module name="Halfi_core.profile-service" options="-parameters" />
+      <module name="Halfi_core.profile-service.main" options="-parameters" />
+      <module name="Halfi_core.profile-service.test" options="-parameters" />
       <module name="Halfi_core.user-service" options="-parameters" />
       <module name="Halfi_core.user-service.main" options="-parameters" />
       <module name="Halfi_core.user-service.test" options="-parameters" />

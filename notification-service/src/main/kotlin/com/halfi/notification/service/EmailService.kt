@@ -46,8 +46,7 @@ class EmailService(private val mailSender: JavaMailSender) {
         }
         
         helper.setSubject(subject)
-        
-        // Красивый HTML шаблон
+
         val htmlContent = """
             <!DOCTYPE html>
             <html>
