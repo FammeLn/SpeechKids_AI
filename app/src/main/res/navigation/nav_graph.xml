@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/authFragment">
+
+    <!-- Auth Flow -->
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="com.example.speechkids_ai.ui.auth.AuthFragment"
+        android:label="Авторизация"
+        tools:layout="@layout/fragment_auth">
+        <action
+            android:id="@+id/action_auth_to_role_selection"
+            app:destination="@id/roleSelectionFragment"
+            app:popUpTo="@id/authFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/roleSelectionFragment"
+        android:name="com.example.speechkids_ai.ui.auth.RoleSelectionFragment"
+        android:label="Выбор роли"
+        tools:layout="@layout/fragment_role_selection" />
+
+    <fragment
+        android:id="@+id/parentOverviewFragment"
+        android:name="com.example.speechkids_ai.ui.parent.ParentOverviewFragment"
+        android:label="Обзор"
+        tools:layout="@layout/fragment_parent_overview" />
+
+    <fragment
+        android:id="@+id/parentExercisesFragment"
+        android:name="com.example.speechkids_ai.ui.parent.ParentExercisesFragment"
+        android:label="Занятия"
+        tools:layout="@layout/fragment_parent_exercises" />
+
+    <fragment
+        android:id="@+id/parentChildrenFragment"
+        android:name="com.example.speechkids_ai.ui.parent.ParentChildrenFragment"
+        android:label="Дети"
+        tools:layout="@layout/fragment_parent_children">
+        <action
+            android:id="@+id/action_parentChildren_to_gameHub"
+            app:destination="@id/gameHubFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/parentAnalyticsFragment"
+        android:name="com.example.speechkids_ai.ui.parent.ParentAnalyticsFragment"
+        android:label="Аналитика"
+        tools:layout="@layout/fragment_parent_analytics" />
+
+    <fragment
+        android:id="@+id/parentSettingsFragment"
+        android:name="com.example.speechkids_ai.ui.parent.ParentSettingsFragment"
+        android:label="Настройки"
+        tools:layout="@layout/fragment_parent_settings" />
+
+    <fragment
+        android:id="@+id/therapistDashboardFragment"
+        android:name="com.example.speechkids_ai.ui.therapist.TherapistDashboardFragment"
+        android:label="Мои пациенты"
+        tools:layout="@layout/fragment_therapist_dashboard" />
+
+    <fragment
+        android:id="@+id/therapistOverviewFragment"
+        android:name="com.example.speechkids_ai.ui.therapist.TherapistOverviewFragment"
+        android:label="Обзор"
+        tools:layout="@layout/fragment_role_placeholder" />
+
+    <fragment
+        android:id="@+id/therapistPatientsFragment"
+        android:name="com.example.speechkids_ai.ui.therapist.TherapistPatientsFragment"
+        android:label="Пациенты"
+        tools:layout="@layout/fragment_role_placeholder" />
+
+    <fragment
+        android:id="@+id/therapistSessionsFragment"
+        android:name="com.example.speechkids_ai.ui.therapist.TherapistSessionsFragment"
+        android:label="Сессии"
+        tools:layout="@layout/fragment_role_placeholder" />
+
+    <fragment
+        android:id="@+id/therapistReportsFragment"
+        android:name="com.example.speechkids_ai.ui.therapist.TherapistReportsFragment"
+        android:label="Отчёты"
+        tools:layout="@layout/fragment_role_placeholder" />
+
+    <fragment
+        android:id="@+id/therapistSettingsFragment"
+        android:name="com.example.speechkids_ai.ui.therapist.TherapistSettingsFragment"
+        android:label="Настройки"
+        tools:layout="@layout/fragment_role_placeholder" />
+
+    <fragment
+        android:id="@+id/adminDashboardFragment"
+        android:name="com.example.speechkids_ai.ui.admin.AdminDashboardFragment"
+        android:label="Администрация"
+        tools:layout="@layout/fragment_admin_dashboard" />
+
+    <fragment
+        android:id="@+id/adminOverviewFragment"
+        android:name="com.example.speechkids_ai.ui.admin.AdminOverviewFragment"
+        android:label="Обзор"
+        tools:layout="@layout/fragment_role_placeholder" />
+
+    <fragment
+        android:id="@+id/adminUsersFragment"
+        android:name="com.example.speechkids_ai.ui.admin.AdminUsersFragment"
+        android:label="Пользователи"
+        tools:layout="@layout/fragment_role_placeholder" />
+
+    <fragment
+        android:id="@+id/adminAnalyticsFragment"
+        android:name="com.example.speechkids_ai.ui.admin.AdminAnalyticsFragment"
+        android:label="Аналитика"
+        tools:layout="@layout/fragment_role_placeholder" />
+
+    <fragment
+        android:id="@+id/adminModelsFragment"
+        android:name="com.example.speechkids_ai.ui.admin.AdminModelsFragment"
+        android:label="Модели"
+        tools:layout="@layout/fragment_role_placeholder" />
+
+    <fragment
+        android:id="@+id/adminSettingsFragment"
+        android:name="com.example.speechkids_ai.ui.admin.AdminSettingsFragment"
+        android:label="Настройки"
+        tools:layout="@layout/fragment_role_placeholder" />
+
+    <fragment
+        android:id="@+id/gameHubFragment"
+        android:name="com.example.speechkids_ai.games.GameHubFragment"
+        android:label="Игра"
+        tools:layout="@layout/fragment_game_hub" />
+</navigation>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/adminOverviewFragment" android:icon="@android:drawable/ic_menu_view" android:title="Обзор" />
+    <item android:id="@+id/adminUsersFragment" android:icon="@android:drawable/ic_menu_manage" android:title="Пользователи" />
+    <item android:id="@+id/adminAnalyticsFragment" android:icon="@android:drawable/ic_menu_sort_by_size" android:title="Аналитика" />
+    <item android:id="@+id/adminModelsFragment" android:icon="@android:drawable/ic_menu_gallery" android:title="Модели" />
+    <item android:id="@+id/adminSettingsFragment" android:icon="@android:drawable/ic_menu_preferences" android:title="Настройки" />
+</menu>
+

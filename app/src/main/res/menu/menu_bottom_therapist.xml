@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/therapistOverviewFragment" android:icon="@android:drawable/ic_menu_view" android:title="Обзор" />
+    <item android:id="@+id/therapistPatientsFragment" android:icon="@android:drawable/ic_menu_myplaces" android:title="Пациенты" />
+    <item android:id="@+id/therapistSessionsFragment" android:icon="@android:drawable/ic_media_play" android:title="Сессии" />
+    <item android:id="@+id/therapistReportsFragment" android:icon="@android:drawable/ic_menu_agenda" android:title="Отчёты" />
+    <item android:id="@+id/therapistSettingsFragment" android:icon="@android:drawable/ic_menu_preferences" android:title="Настройки" />
+</menu>
+

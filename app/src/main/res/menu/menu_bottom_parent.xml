@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/parentOverviewFragment" android:icon="@android:drawable/ic_menu_view" android:title="Главная" />
+    <item android:id="@+id/parentExercisesFragment" android:icon="@android:drawable/ic_media_play" android:title="Занятия" />
+    <item android:id="@+id/parentChildrenFragment" android:icon="@android:drawable/ic_menu_myplaces" android:title="Дети" />
+    <item android:id="@+id/parentAnalyticsFragment" android:icon="@android:drawable/ic_menu_sort_by_size" android:title="Аналитика" />
+    <item android:id="@+id/parentSettingsFragment" android:icon="@android:drawable/ic_menu_preferences" android:title="Настройки" />
+</menu>
+

@@ -1,0 +1,28 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.SpeechKids_AI" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#4F46E5</item>
+        <item name="colorSecondary">#10B981</item>
+        <item name="colorTertiary">#F97316</item>
+        <item name="colorError">#EF4444</item>
+        <item name="android:colorBackground">#F8FAFC</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.SpeechKids_AI" parent="Base.Theme.SpeechKids_AI" />
+
+    <!-- Fullscreen theme for child game -->
+    <style name="Theme.SpeechKids_AI.FullScreen" parent="Theme.SpeechKids_AI">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+    </style>
+
+    <!-- Child Mode Theme -->
+    <style name="Theme.SpeechKids_AI.Child" parent="Theme.SpeechKids_AI">
+        <item name="colorPrimary">#F97316</item>
+        <item name="colorSecondary">#FB923C</item>
+        <item name="android:colorBackground">#FFF7ED</item>
+    </style>
+</resources>
