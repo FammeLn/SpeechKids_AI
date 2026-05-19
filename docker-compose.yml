@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    container_name: speechkids-postgres
+    environment:
+      POSTGRES_DB: speechkids
+      POSTGRES_USER: speechkids
+      POSTGRES_PASSWORD: speechkids
+    ports:
+      - "5432:5432"
+    volumes:
+      - speechkids_db_data:/var/lib/postgresql/data
+
+volumes:
+  speechkids_db_data:
