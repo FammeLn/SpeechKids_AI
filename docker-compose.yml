@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: speechkids-db
+    environment:
+      POSTGRES_DB: speechkids
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d speechkids"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ai-service:
+    build:
+      context: ./speechkids-ai-service
+      dockerfile: Dockerfile
+    container_name: speechkids-ai
+    ports:
+      - "8001:8001"
+    environment:
+      - WHISPER_MODEL_NAME=base
+    volumes:
+      - whisper_cache:/root/.cache/huggingface
+      - whisper_ctranslate2:/root/.cache/whisper
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./speechkids-backend
+      dockerfile: Dockerfile
+    container_name: speechkids-api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/speechkids
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - AI_SERVICE_URL=http://ai-service:8001
+    depends_on:
+      db:
+        condition: service_healthy
+      ai-service:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  whisper_cache:
+  whisper_ctranslate2:
