@@ -1,0 +1,30 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/halfi_user_db   # своя БД, порт 5434
+    username: halfi_user
+    password: ${USER_DB_PASS:halfi_user_password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    consumer:
+      group-id: user-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.halfi.*"
+        spring.json.value.default.type: com.halfi.user.messaging.dto.UserRegisteredEvent
+
+# Тот же секрет что в auth-service — только для валидации, не генерации
+jwt:
+  secret: ${JWT_SECRET:ThisIsAVeryLongSecretKeyForHalfiAtLeast32Chars}

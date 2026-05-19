@@ -1,0 +1,38 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: payment-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/halfi_db
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: payment-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+jwt:
+  secret: ${JWT_SECRET:8a9b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7A8B9C0D1E2F3G4H5I6J7K8L9M0N}
+
+robokassa:
+  merchant-login: ${ROBOKASSA_LOGIN:halfiapp}
+  password-1: ${ROBOKASSA_PASS1:test_pass_1}
+  password-2: ${ROBOKASSA_PASS2:test_pass_2}
+  is-test: ${ROBOKASSA_TEST:true}
+  url: https://auth.robokassa.ru/Merchant/Index.aspx

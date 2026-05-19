@@ -1,0 +1,35 @@
+groups:
+- name: HalfiAlerts
+  rules:
+  # Сервис упал (не отвечает на запросы Prometheus)
+  - alert: ServiceDown
+    expr: up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Сервис {{ $labels.instance }} упал"
+      description: "Сервис {{ $labels.instance }} (job: {{ $labels.job }}) недоступен более 1 минуты."
+
+  #  Высокое потребление памяти (более 90%)
+  - alert: HighMemoryUsage
+    expr: (jvm_memory_used_bytes{area="heap"} / jvm_memory_max_bytes{area="heap"}) > 0.9
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Высокое потребление памяти в {{ $labels.application }}"
+      description: "Использование Heap-памяти в сервисе {{ $labels.application }} превысило 90% в течение 5 минут."
+
+  #  Высокий уровень ошибок (более 5% за 5 минут)
+  - alert: HighErrorRate
+    expr: |
+      sum(rate(http_server_requests_seconds_count{status=~"5.."}[5m])) by (application) 
+      / 
+      sum(rate(http_server_requests_seconds_count[5m])) by (application) > 0.05
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Высокий уровень ошибок в {{ $labels.application }}"
+      description: "Доля 5xx ошибок в сервисе {{ $labels.application }} превысила 5% за последние 5 минут."
